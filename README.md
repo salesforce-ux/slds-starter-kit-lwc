@@ -1,4 +1,4 @@
-# Salesforce Design System 2 Starter Kit
+# SLDS Starter Kit (LWC)
 
 A starter for prototyping Salesforce experiences, with SLDS 1/2 switching and dark mode previews. Build and preview locally, then publish a link to share your prototype.
 
