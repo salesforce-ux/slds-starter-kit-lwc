@@ -20,7 +20,7 @@
     "@lwc/synthetic-shadow": "^9.0.2",
     "@salesforce-ux/design-system": "^2.264.3",
     "@salesforce-ux/design-system-2": "^2.264.2",
-    "lightning-base-components": "^1.28.15-alpha",
+    "lightning-base-components": "^1.28.19-alpha",
     "lwc": "^9.0.2"
   },
   "devDependencies": {
