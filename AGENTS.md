@@ -1,67 +1,48 @@
 # Agent guidelines: Design System 2 Starter Kit
 
-This repository is a **starter template** for prototyping Salesforce-aligned UIs locally. It uses **LWC** (Lightning Web Components), **Vite**, **SLDS** (Salesforce Lightning Design System), and **lightning-base-components**, with synthetic shadow DOM and client-side routing.
+Local Salesforce UI starter using LWC, Vite, SLDS, Lightning Base Components, synthetic shadow DOM, and client-side routing.
 
----
+## Code placement and navigation
 
-## Project-specific guidance
+- Route views: `src/modules/page/<name>/`, tagged `page-*`. Add routes in `src/routes.config.js`; import and register components in `src/modules/shell/app/app.js` (`ROUTE_COMPONENTS`). Do not edit `src/router.js` to add routes.
+- New features and pages become the primary tab and initial landing page without confirmation. Assign a `navPage`, put its id first in every applicable app's `pages` array in `src/apps.config.js`, and set each app's `defaultPath` to the app-prefixed route. Keep existing pages as secondary tabs unless the user requests otherwise. Apps without primary navigation, such as Builder, are exempt.
+- Reusable UI and SLDS blueprints: `src/modules/ui/<name>/`, tagged `ui-*`.
+- App shell: `src/modules/shell/<name>/`, tagged `shell-*`, for the root app, layout, theme, and docked panels. Put route views in `page/` and reusable components in `ui/`.
+- Do not add components under `src/modules/lightning/` or `src/build/lightning-icon/shims/`, except the checked-in icon overrides.
 
-### Where to put code
+## UI implementation
 
-- **Route-level views**: `src/modules/page/<name>/` → tag `page-<name>`. Add a route in `src/routes.config.js`, then import and register the component in `src/modules/shell/app/app.js` (`ROUTE_COMPONENTS`). The router picks up new routes automatically; `src/router.js` does not need editing.
-- **New features and pages are primary by default**: When the user requests a new feature or page, make it the primary navigation tab and initial landing page without asking for confirmation. Give it a `navPage`, place that id first in every applicable navigation app's `pages` list in `src/apps.config.js`, and set each applicable app's `defaultPath` to its app-prefixed route so it appears immediately on page load. Keep existing pages as secondary tabs unless the user explicitly requests different behavior. Apps without primary navigation, such as the Builder app, are exempt.
-- **Reusable UI / SLDS blueprints**: `src/modules/ui/<name>/` → tag `ui-<name>`. Use inside pages, the shell, or other components.
-- **App shell**: `src/modules/shell/<name>/` → tag `shell-`*. Root app, layout, theme, docked panels — not route views (`page-`*) and not reusable components  (`ui-*`).
-- **Do not** add components under `src/build/lightning-icon/shims/` except the checked-in icon overrides, or under `src/modules/lightning/`.
+For all UI work, read and follow `node_modules/@salesforce/afv-skills/skills/design-systems-slds-apply/SKILL.md` first. Re-read it when iterating on presentation, including markup, CSS, layout, icons, and component selection.
 
-### SLDS linter
+- Use Lightning Base Components whenever available, such as `lightning-card`, `lightning-button`, and `lightning-icon`. Hand-roll a blueprint only when no base component covers the case, and explain when you do.
+- Keep LWCs small and focused on one responsibility.
+- Do not use `!important` or inline `style` attributes. Use utility classes or component CSS.
+- Modals must extend `lightning/modal`. Follow `src/modules/ui/demoModal/` for header, body, and footer slots; open with `MyModal.open({ size, label })`. Do not use raw `slds-modal` markup.
+- Use `lightning-input`, `lightning-combobox`, `lightning-radio-group`, `lightning-textarea`, or `lightning-select` for all form inputs. Do not use raw `<input>`, `<select>`, or `<textarea>`. Choose the correct type, such as `type="email"`, and use `read-only` for data display.
 
-After you change any `.html` or `.css` file, run the SLDS linter on each file you touched before considering the task complete:
+Lint every changed HTML or CSS file before completing the task:
 
 ```bash
 npx @salesforce-ux/slds-linter@latest lint <path-to-changed-file>
 ```
 
-Fix reported issues where possible. If something cannot be fixed, say so briefly.
+Fix reported issues where possible and briefly report any remaining issues.
 
-### Engineering habits
+## Skills
 
-- For ALL UI work, **read `node_modules/@salesforce/afv-skills/skills/design-systems-slds-apply/SKILL.md` first**.
-- **Prefer Lightning Base Components over hand-rolled SLDS markup.** When a `lightning-*` component exists for what you're building, use it instead of reconstructing the `slds-*` blueprint from memory (e.g. `lightning-card` not `slds-card`, `lightning-button` not `slds-button`, `lightning-icon` not `slds-icon`). Only hand-roll a blueprint when no base component covers the case, and say so when you do.
-- Prefer small, single-responsibility LWCs and readable structure.
-- Do not use `!important`.
-- Do not use inline `style` attributes; use utility classes or the component’s CSS file as appropriate.
+SLDS and LWC skills ship in `@salesforce/afv-skills`. Paths below are relative to `node_modules/@salesforce/afv-skills/skills/` unless otherwise shown.
 
-### Modals
+| Skill path | Use |
+|------------|-----|
+| `design-systems-slds-apply/SKILL.md` | Required first read for all UI work: blueprints, hooks, utilities, icons, and base component selection. |
+| `experience-lwc-generate/SKILL.md` | Consult when stuck on LWC behavior, including `@api`, `@wire`, lifecycle, events, or template expressions. See `references/lwc-best-practices.md` and `references/template-anti-patterns.md`. Not routine UI work. |
+| `design-systems-slds2-migrate/SKILL.md` | SLDS 1 to 2 migration, linter fixes, and hook/token replacements. |
+| `design-systems-slds-validate/SKILL.md` | Audits and scorecards only, not implementation or fixes. |
+| `.agent/skills/repo-setup/SKILL.md` (repo-relative) | Saving or backing up work: host detection, prerequisites, repository creation, and initial push. |
+| `.agent/skills/first-time-deploy/SKILL.md` (repo-relative) | First GitHub Pages deployment or sharing a published link. For repeat deployments, run `npm run deploy`. |
 
-Extend `lightning/modal`, following `**src/modules/ui/demoModal/`** as the reference (header, body, footer slots; open via `MyModal.open({ size, label })`). Do not build modals from raw `slds-modal` markup.
+## GitHub Pages
 
-### Forms
+Publish only through `npm run deploy`: it runs `build:gh-pages` with hash routing and pushes `dist/` to `gh-pages` on `origin`. `npm run dev` and `npm run build` retain path routing. GitHub Pages must use **Deploy from a branch → gh-pages**; see [README.md](README.md).
 
-Use Lightning Base Component form elements (`lightning-input`, `lightning-combobox`, `lightning-radio-group`, `lightning-textarea`, `lightning-select`) for all form inputs. Do not use raw `<input>`, `<select>`, or `<textarea>`. Use correct input `type` (e.g., `type="email"`) and `read-only` mode for data display.
-
-### SLDS Agent Skills
-
-SLDS skills ship in the **`@salesforce/afv-skills`** npm dependency.
-
-- **For ALL UI work** (markup, CSS, layout, icons, LBC vs blueprint), **read and follow `node_modules/@salesforce/afv-skills/skills/design-systems-slds-apply/SKILL.md` first**. Do not improvise SLDS from memory when a skill exists. Re-read it when you iterate on presentation.
-- **`design-systems-slds2-migrate`** — SLDS 1→2 / linter-driven uplift only.
-- **`design-systems-slds-validate`** — audit or scorecard requests only.
-
-| Skill | `SKILL.md` | When to use |
-|-------|------------|-------------|
-| design-systems-slds-apply | `node_modules/@salesforce/afv-skills/skills/design-systems-slds-apply/SKILL.md` | Default for SLDS-backed UI: blueprints, hooks, utilities, icons, LBC choice. |
-| experience-lwc-generate | `node_modules/@salesforce/afv-skills/skills/experience-lwc-generate/SKILL.md` | As-needed reference when stuck on LWC framework behavior. Not part of routine UI work. See `references/` (esp. `lwc-best-practices.md`, `template-anti-patterns.md`). |
-| design-systems-slds2-migrate | `node_modules/@salesforce/afv-skills/skills/design-systems-slds2-migrate/SKILL.md` | Migration and fixes from SLDS 1 to 2; linter violations and hook/token replacements. |
-| design-systems-slds-validate | `node_modules/@salesforce/afv-skills/skills/design-systems-slds-validate/SKILL.md` | Compliance audit or scored quality report, not for implementing or fixing UI. |
-| repo-setup | `.agent/skills/repo-setup/SKILL.md` | Set up a GitHub repo: detects host from origin remote, prerequisites, repo creation, initial push. Use when the user mentions saving or backing up their work. |
-| first-time-deploy | `.agent/skills/first-time-deploy/SKILL.md` | Publish to GitHub Pages. Repeat deploys: just `npm run deploy`. First time: runs repo-setup, then deploys and configures Pages. Use when the user asks about deploying or sharing a link with a PM, stakeholder, etc. |
-
-### LWC troubleshooting
-
-If you hit unexpected LWC framework behavior (`@api`, `@wire`, lifecycle, events, template expressions), consult the **`experience-lwc-generate`** skill's `references/` files.
-
-### Deployment (GitHub Pages)
-
-- **Only path:** **`npm run deploy`** runs **`build:gh-pages`** (hash routing for static hosting), then pushes **`dist/`** to **`gh-pages`** on **`origin`**. Default **`npm run build`** / **`npm run dev`** keep path-based routing. GitHub Pages **Source** must be **Deploy from a branch** → **`gh-pages`** (see README).
-- For another push target, `gh-pages` accepts **`-o <remote>`** or **`-r <url>`**; mention when the user asks.
+When asked about another push target, mention `gh-pages` options `-o <remote>` and `-r <url>`.

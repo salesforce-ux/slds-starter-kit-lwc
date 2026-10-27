@@ -1,12 +1,13 @@
-# `ui/` — Reusable components
+# `ui/`: Reusable components
 
-Components in this folder are **building blocks** used by pages, the shell, or other components. They get the `ui-` prefix in the DOM (e.g. `ui-global-header`, `ui-global-navigation`).
+Building blocks used by pages, the shell, or other components, with `ui-*` tags.
 
-**Use this namespace for:**
+Use this namespace for:
 
-- Reusable UI primitives (cards, buttons, modals, form controls)
-- Shared layout or composition blocks
-- Anything that is **not** a full route/view
-- SLDS component blueprint implementations (global header, global navigation, etc.)
+- UI primitives: cards, buttons, modals, form controls.
+- Shared layout and composition blocks.
+- SLDS blueprints, such as global navigation.
 
-**Example:** Add a folder `card/` here → use as `<ui-card>` in your templates.
+For example, create `card/` and use `<ui-card>`. Prefer Lightning Base Components when available; follow [AGENTS.md](../../../AGENTS.md).
+
+Put route views in `page/`.

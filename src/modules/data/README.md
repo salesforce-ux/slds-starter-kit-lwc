@@ -1,12 +1,11 @@
-# `data/` — Plain modules (not components)
+# `data/`: Plain JavaScript modules
 
-Folders here hold **JavaScript modules** imported with the `data/<name>` path (e.g. `import { getAllContacts } from 'data/contacts'`). They are **not** LWCs—there is no `data-*` tag in templates.
+Use this namespace for shared helpers, fixtures, and static datasets that do not render UI. Import modules as `data/<name>`; they are not LWCs and have no `data-*` tag.
 
-**Use this namespace for:**
+For example, add `contacts/contacts.js` and import it from a page or UI component:
 
-- Shared data helpers, fixtures, or static datasets
-- Code that pages or components import but that does not render UI by itself
+```js
+import { getAllContacts } from 'data/contacts';
+```
 
-**Do not use for:** anything that should be a custom element—put those under `ui/` (or route views under `page/`).
-
-**Example:** Add `contacts/contacts.js` → import as `'data/contacts'` from your `page-*` or `ui-*` modules.
+Put custom elements in `ui/` and route views in `page/`.
